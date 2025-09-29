@@ -1,149 +1,214 @@
-# Atividade Prática: Desenvolvimento de API REST com NestJS
+# 📝 API de Gerenciamento de Tarefas - NestJS
 
-## Descrição da Atividade
-Esta atividade prática tem como objetivo consolidar os conhecimentos adquiridos no [tutorial introdutório de API REST e NestJS](https://github.com/infoweb-pos/api-nest-notas-01-introducao) através da implementação de um CRUD completo para gerenciamento de tarefas.
+Uma API REST completa para gerenciamento de tarefas construída com NestJS, TypeORM e SQLite.
 
-## Objetivos de Aprendizado
-Ao final desta atividade, o aluno será capaz de:
-- Configurar um projeto NestJS do zero
-- Implementar um CRUD completo com TypeORM
-- Configurar banco de dados SQLite3
-- Aplicar validações com Class Validator
-- Testar endpoints de uma API REST
-- Implementar boas práticas de desenvolvimento com NestJS
+## 🚀 Tecnologias Utilizadas
 
-# Checklist de Progresso da Atividade
+- **NestJS** - Framework Node.js
+- **TypeORM** - ORM para TypeScript
+- **SQLite3** - Banco de dados
+- **class-validator** - Validação de dados
+- **class-transformer** - Transformação de dados
 
-Use este checklist para acompanhar seu progresso durante a implementação da API de tarefas.
+## 📋 Pré-requisitos
 
-## ✅ Pré-requisitos e Configuração
+- Node.js 18+
+- npm ou yarn
+- Git
 
-### Verificação do Ambiente
-- [ ] Node.js (v18+) instalado e funcionando
-- [ ] npm instalado e funcionando
-- [ ] Git instalado e configurado
-- [ ] Editor de código (VS Code recomendado) configurado
-- [ ] Cliente REST (Postman/Insomnia/Thunder Client) instalado
+## 🛠️ Instalação e Configuração
 
-### Configuração Inicial
-- [ ] Fork do repositório tutorial realizado
-- [ ] Repositório clonado localmente
-- [ ] NestJS CLI instalado globalmente (`npm install -g @nestjs/cli`)
-- [ ] Projeto NestJS criado (`nest new tasks-api`)
-- [ ] Dependências instaladas (TypeORM, SQLite, class-validator, etc.)
+```bash
+# Clone o repositório
+git clone <url-do-repositorio>
+cd tasks-api
 
-## 🗂️ Estrutura do Projeto
+# Instale as dependências
+npm install
 
-### Criação de Diretórios
-- [ ] Diretório `src/tasks` criado
-- [ ] Diretório `src/tasks/dto` criado
-- [ ] Estrutura de pastas organizada conforme especificação
+# Execute a aplicação em modo desenvolvimento
+npm run start:dev
+```
 
-### Arquivos Base
-- [ ] `app.module.ts` configurado com TypeORM
-- [ ] `main.ts` configurado com CORS e ValidationPipe
-- [ ] Configuração do banco SQLite implementada
+A API estará rodando em `http://localhost:3000`
 
-## 📊 Implementação da Entity
+## 📊 Estrutura do Projeto
 
-### Task Entity (src/tasks/task.entity.ts)
-- [ ] Classe `Task` criada com decorator `@Entity()`
-- [ ] Campo `id` com `@PrimaryGeneratedColumn()`
-- [ ] Campo `title` com `@Column()`
-- [ ] Campo `description` com `@Column()`
-- [ ] Campo `status` com enum `TaskStatus` e configuração adequada
-- [ ] Campos `createdAt` e `updatedAt` com decorators de timestamp
-- [ ] Enum `TaskStatus` definido corretamente (aberto, fazendo, finalizado)
+```
+src/
+├── tasks/
+│   ├── dto/
+│   │   ├── create-task.dto.ts
+│   │   └── update-task.dto.ts
+│   ├── entities/
+│   │   └── task.entity.ts
+│   ├── tasks.controller.ts
+│   ├── tasks.service.ts
+│   └── tasks.module.ts
+├── app.module.ts
+└── main.ts
+```
 
-## 📝 Implementação dos DTOs
+## 🔌 Endpoints da API
 
-### CreateTaskDto (src/tasks/dto/create-task.dto.ts)
-- [ ] Classe `CreateTaskDto` criada
-- [ ] Validação `@IsString()` e `@IsNotEmpty()` no campo `title`
-- [ ] Validação `@IsString()` e `@IsNotEmpty()` no campo `description`
-- [ ] Validação `@IsEnum()` e `@IsOptional()` no campo `status`
+### 📋 Listar todas as tarefas
+```http
+GET /tasks
+```
+**Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Estudar NestJS",
+    "description": "Completar a atividade prática",
+    "status": "aberto",
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "updatedAt": "2024-01-15T10:30:00.000Z"
+  }
+]
+```
 
-### UpdateTaskDto (src/tasks/dto/update-task.dto.ts)
-- [ ] Classe `UpdateTaskDto` criada
-- [ ] Todos os campos opcionais com `@IsOptional()`
-- [ ] Validações adequadas mantidas para cada campo
+### ➕ Criar nova tarefa
+```http
+POST /tasks
+Content-Type: application/json
 
-## 🔧 Implementação do Service
+{
+  "title": "Nova tarefa",
+  "description": "Descrição da tarefa",
+  "status": "aberto"
+}
+```
+**Resposta (201 Created):**
+```json
+{
+  "id": 1,
+  "title": "Nova tarefa",
+  "description": "Descrição da tarefa",
+  "status": "aberto",
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:30:00.000Z"
+}
+```
 
-### TasksService (src/tasks/tasks.service.ts)
-- [ ] Classe `TasksService` com decorator `@Injectable()`
-- [ ] Injeção do repositório com `@InjectRepository(Task)`
-- [ ] Método `findAll()` implementado
-- [ ] Método `findOne(id)` implementado com tratamento de erro 404
-- [ ] Método `create(createTaskDto)` implementado
-- [ ] Método `update(id, updateTaskDto)` implementado
-- [ ] Método `remove(id)` implementado
-- [ ] Tratamento adequado de erros em todos os métodos
+### 🔍 Buscar tarefa por ID
+```http
+GET /tasks/1
+```
+**Resposta:**
+```json
+{
+  "id": 1,
+  "title": "Estudar NestJS",
+  "description": "Completar a atividade prática",
+  "status": "aberto",
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:30:00.000Z"
+}
+```
 
-## 🎮 Implementação do Controller
+### ✏️ Atualizar tarefa
+```http
+PUT /tasks/1
+Content-Type: application/json
 
-### TasksController (src/tasks/tasks.controller.ts)
-- [ ] Classe `TasksController` com decorator `@Controller('tasks')`
-- [ ] Injeção do service no construtor
-- [ ] Endpoint `GET /tasks` com decorator `@Get()`
-- [ ] Endpoint `GET /tasks/:id` com `@Get(':id')` e `ParseIntPipe`
-- [ ] Endpoint `POST /tasks` com `@Post()` e `@Body()`
-- [ ] Endpoint `PUT /tasks/:id` com `@Put(':id')` e validações
-- [ ] Endpoint `DELETE /tasks/:id` com `@Delete(':id')`
-- [ ] Status codes HTTP adequados configurados
+{
+  "title": "Título atualizado",
+  "status": "fazendo"
+}
+```
+**Resposta:**
+```json
+{
+  "id": 1,
+  "title": "Título atualizado",
+  "description": "Descrição da tarefa",
+  "status": "fazendo",
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T11:00:00.000Z"
+}
+```
 
-## 📦 Configuração do Module
+### 🗑️ Deletar tarefa
+```http
+DELETE /tasks/1
+```
+**Resposta:** 204 No Content
 
-### TasksModule (src/tasks/tasks.module.ts)
-- [ ] Classe `TasksModule` com decorator `@Module()`
-- [ ] Importação do `TypeOrmModule.forFeature([Task])`
-- [ ] Controller adicionado ao array `controllers`
-- [ ] Service adicionado ao array `providers`
-- [ ] Módulo importado no `AppModule`
+## 🎯 Status das Tarefas
 
-## 🚀 Execução e Testes
+Os status disponíveis são:
+- `aberto` - Tarefa pendente
+- `fazendo` - Tarefa em andamento  
+- `finalizado` - Tarefa concluída
 
-### Inicialização da Aplicação
-- [ ] Aplicação inicia sem erros (`npm run start:dev`)
-- [ ] Banco de dados SQLite criado automaticamente (tasks.db)
-- [ ] Console mostra "API rodando em http://localhost:3000"
-- [ ] Hot reload funcionando adequadamente
+## ⚠️ Validações
 
-### Teste dos Endpoints - GET
-- [ ] `GET /tasks` retorna array vazio inicialmente (200 OK)
-- [ ] `GET /tasks/1` retorna 404 Not Found quando não há tarefas
+### Criar Tarefa (POST):
+- `title`: string não vazia (obrigatório)
+- `description`: string não vazia (obrigatório)
+- `status`: enum (aberto, fazendo, finalizado) - opcional, padrão: "aberto"
 
-### Teste dos Endpoints - POST
-- [ ] `POST /tasks` com dados válidos cria tarefa (201 Created)
-- [ ] `POST /tasks` retorna tarefa criada com ID, timestamps
-- [ ] `POST /tasks` com título vazio retorna 400 Bad Request
-- [ ] `POST /tasks` com status inválido retorna 400 Bad Request
+### Atualizar Tarefa (PUT):
+- Todos os campos são opcionais
+- Validações mantidas para campos enviados
 
-### Teste dos Endpoints - GET com dados
-- [ ] `GET /tasks` retorna array com tarefa(s) criada(s)
-- [ ] `GET /tasks/1` retorna tarefa específica (200 OK)
-- [ ] `GET /tasks/999` retorna 404 Not Found
+## 🐛 Troubleshooting
 
-### Teste dos Endpoints - PUT
-- [ ] `PUT /tasks/1` com dados válidos atualiza tarefa (200 OK)
-- [ ] `PUT /tasks/1` retorna tarefa atualizada
-- [ ] `PUT /tasks/999` retorna 404 Not Found
-- [ ] Atualização parcial funciona (apenas alguns campos)
+### Erro: "Task with ID X not found"
+- Verifique se o ID existe
+- Use GET /tasks para listar todas as tarefas
 
-### Teste dos Endpoints - DELETE
-- [ ] `DELETE /tasks/1` remove tarefa (204 No Content)
-- [ ] `DELETE /tasks/999` retorna 404 Not Found
-- [ ] Tarefa removida não aparece mais em `GET /tasks`
+### Erro: "Validation failed"
+- Verifique se todos os campos obrigatórios estão presentes
+- Confirme que o status é um dos valores permitidos
 
-## 📋 Testes de Validação
+### Erro ao iniciar a aplicação
+- Execute `npm install` para instalar dependências
+- Verifique se a porta 3000 está disponível
 
-### Validação de Entrada
-- [ ] Campos obrigatórios (title, description) são validados
-- [ ] Status aceita apenas valores válidos (aberto, fazendo, finalizado)
-- [ ] Campos extras são ignorados (whitelist ativa)
-- [ ] Mensagens de erro são claras e específicas
+### Banco de dados
+- O SQLite é criado automaticamente no arquivo `tasks.db`
+- Os dados persistem entre reinicializações
 
-### Validação de IDs
-- [ ] IDs não numéricos retornam 400 Bad Request
-- [ ] IDs decimais são tratados adequadamente
-- [ ] IDs negativos são tratados adequadamente
+## 🚀 Comandos Úteis
+
+```bash
+# Desenvolvimento
+npm run start:dev          # Modo desenvolvimento com hot reload
+npm run start             # Produção
+npm run build            # Build do projeto
+
+# Linting
+npm run lint             # Análise de código
+npm run format           # Formatação automática
+```
+
+## 📝 Exemplos de Uso
+
+### Criando uma tarefa com cURL:
+```bash
+curl -X POST http://localhost:3000/tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Revisar código",
+    "description": "Revisar pull requests pendentes",
+    "status": "fazendo"
+  }'
+```
+
+### Atualizando uma tarefa:
+```bash
+curl -X PUT http://localhost:3000/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"status": "finalizado"}'
+```
+
+## 📄 Licença
+
+Este projeto está sob a licença GNU. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+---
+
+**Desenvolvido como parte da atividade prática de API REST com NestJS** 🎓
